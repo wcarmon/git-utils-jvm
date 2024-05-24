@@ -8,6 +8,7 @@ import java.util.Collection;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevTag;
@@ -23,7 +24,7 @@ public final class GitTagUtils {
      * Semver version bump
      *
      * @param oldVersion "0.1.2" or "v0.1.2"
-     * @param bumpType major, minor, patch, ...
+     * @param bumpType   major, minor, patch, ...
      * @return next major/minor/patch version (eg. "0.1.3" or "v0.1.3")
      */
     public static String bumpVersion(String oldVersion, VersionIncrementType bumpType) {
@@ -36,7 +37,57 @@ public final class GitTagUtils {
     }
 
     /**
-     * Equivalent: git fetch --tags Equivalent: git fetch --tags --prune --prune-tags
+     * @param git     previously configured Git repo connection
+     * @param tagName {@link SemVer} instance
+     * @param message anything helpful for human tag readers
+     * @return newly created tag Ref
+     * @throws RefAlreadyExistsException when tag already exists
+     */
+    public static Ref createLightWeightTag(Git git, SemVer tagName, String message) {
+        requireNonNull(git, "git is required and null.");
+        requireNonNull(tagName, "tagName is required and null.");
+        if (message == null || message.isBlank()) {
+            throw new IllegalArgumentException("message is required");
+        }
+
+        return createLightWeightTag(git, tagName.toString(), message);
+    }
+
+    /**
+     * Equivalent: git tag v0.0.3                   <-- lightweight
+     * Equivalent: git tag -a v0.0.4 -m "foo bar"   <-- annotated
+     *
+     * @param git     previously configured Git repo connection
+     * @param tagName any valid semver string
+     * @param message anything helpful for human tag readers
+     * @return newly created tag Ref
+     * @throws RefAlreadyExistsException when tag already exists
+     */
+    public static Ref createLightWeightTag(Git git, String tagName, String message) {
+        requireNonNull(git, "git is required and null.");
+        if (message == null || message.isBlank()) {
+            throw new IllegalArgumentException("message is required");
+        }
+        if (tagName == null || tagName.isBlank()) {
+            throw new IllegalArgumentException("tagName is required");
+        }
+
+        // -- require valid
+        SemVer.parse(tagName);
+
+        try {
+            return git.tag()
+                    .setName(tagName)
+                    .setMessage(message)
+                    .call();
+        } catch (GitAPIException ex) {
+            throw new RuntimeException("failed to create tag", ex);
+        }
+    }
+
+    /**
+     * Equivalent: git fetch --tags
+     * Equivalent: git fetch --tags --prune --prune-tags
      *
      * <p>GOTCHA: requires "org.eclipse.jgit:org.eclipse.jgit.ssh.apache"
      *
@@ -58,10 +109,12 @@ public final class GitTagUtils {
     }
 
     /**
-     * Equivalent: git show v0.0.3 Equivalent: git show v0.0.4
+     * Equivalent: git show v0.0.3
+     * Equivalent: git show v0.0.4
+     * To get messages: git for-each-ref refs/tags --format='%(refname) %(contents:subject)'
      *
-     * @param git previously configured Git repo connection
-     * @param tagName TODO
+     * @param git     previously configured Git repo connection
+     * @param tagName semver, like "0.0.4"
      * @return AnnotatedTag
      */
     @Nullable
@@ -106,7 +159,10 @@ public final class GitTagUtils {
     }
 
     /**
-     * Equivalent: git tag Equivalent: git tag --list Equivalent: git show-ref --tags Equivalent: ls
+     * Equivalent: git tag
+     * Equivalent: git tag --list
+     * Equivalent: git show-ref --tags
+     * Equivalent: ls
      * $REPO_ROOT/.git/refs/tags
      *
      * @param git previously configured Git repo connection

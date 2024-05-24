@@ -57,7 +57,8 @@ public record SemVer(
     }
 
     private SemVer(Builder builder) {
-        this(builder.major,
+        this(
+                builder.major,
                 builder.minor,
                 builder.patch,
                 builder.preReleaseLabel,
