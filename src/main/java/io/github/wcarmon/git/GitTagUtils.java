@@ -80,7 +80,7 @@ public final class GitTagUtils {
         try {
             return git.tag().setName(tagName).setMessage(message).call();
         } catch (GitAPIException ex) {
-            throw new RuntimeException("failed to create tag", ex);
+            throw new RuntimeException("Failed to create tag", ex);
         }
     }
 
@@ -132,7 +132,7 @@ public final class GitTagUtils {
                             .findFirst()
                             .orElse(null);
         } catch (Exception ex) {
-            throw new RuntimeException("failed to get tags list", ex);
+            throw new RuntimeException("Failed to get tags list", ex);
         }
 
         if (tagRef == null) {
@@ -153,7 +153,7 @@ public final class GitTagUtils {
                     .build();
 
         } catch (IOException ex) {
-            throw new RuntimeException("failed to get tag annotations", ex);
+            throw new RuntimeException("Failed to get tag annotations", ex);
         }
     }
 
@@ -194,7 +194,7 @@ public final class GitTagUtils {
             return builder.setGitDir(normalized.toFile()).findGitDir().readEnvironment().build();
 
         } catch (Exception ex) {
-            throw new RuntimeException("failed to open git dir: " + normalized, ex);
+            throw new RuntimeException("Failed to open git dir: " + normalized, ex);
         }
     }
 
