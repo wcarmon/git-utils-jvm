@@ -195,8 +195,7 @@ public record SemVer(
         private int patch;
         private String preReleaseLabel;
 
-        private Builder() {
-        }
+        private Builder() {}
 
         public static Builder builder() {
             return new Builder();

@@ -55,8 +55,7 @@ public record AnnotatedTag(
         private String taggerEmail;
         private Instant ts;
 
-        private Builder() {
-        }
+        private Builder() {}
 
         public AnnotatedTag build() {
             return new AnnotatedTag(this);
