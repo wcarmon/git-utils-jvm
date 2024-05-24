@@ -183,7 +183,7 @@ public final class GitTagUtils {
 
     /**
      * @param gitDir path to a directory named ".git"
-     * @return open connection to a Repository
+     * @return open connection to a Repository.  Caller responsible for closing
      */
     public static Repository openRepository(Path gitDir) {
         requireNonNull(gitDir, "gitDir is required and null.");
