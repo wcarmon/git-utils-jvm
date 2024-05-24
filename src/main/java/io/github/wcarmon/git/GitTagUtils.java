@@ -16,6 +16,7 @@ import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.jetbrains.annotations.Nullable;
 
@@ -172,6 +173,7 @@ public final class GitTagUtils {
 
         try {
             return git.tagList().call();
+
         } catch (GitAPIException e) {
             throw new RuntimeException("Failed to list tags", e);
         }
@@ -195,6 +197,27 @@ public final class GitTagUtils {
 
         } catch (Exception ex) {
             throw new RuntimeException("Failed to open git dir: " + normalized, ex);
+        }
+    }
+
+    /**
+     * Equivalent: git push origin --tags
+     * Push tags to origin.
+     *
+     * @param git previously configured Git repo connection
+     * @return result
+     */
+    public static Iterable<PushResult> pushTags(Git git) {
+        requireNonNull(git, "git is required and null.");
+
+        try {
+            return git.push()
+                    .setRemote("origin")
+                    .setRefSpecs(new RefSpec("refs/tags/*:refs/tags/*"))
+                    .call();
+
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to push tags", ex);
         }
     }
 
