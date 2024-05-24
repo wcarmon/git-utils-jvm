@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 // TODO: generate builder
 
-/** https://semver.org/ */
+/** See https://semver.org */
 public record SemVer(
         int major,
         int minor,
@@ -21,7 +21,7 @@ public record SemVer(
     private static final int MAX_BUILD_META_LEN = 48;
     private static final int MAX_LEN = 128;
     private static final int MAX_PRE_RELEASE_LABEL_LEN = 48;
-    private static Pattern SEMVER = Pattern.compile(
+    private static final Pattern SEMVER = Pattern.compile(
             "^v?(\\d+)\\.(\\d+)\\.(\\d+)(-([0-9A-Za-z.]+))?(\\+([0-9A-Za-z.]+))?$");
 
     public SemVer {
@@ -48,18 +48,32 @@ public record SemVer(
 
         if (!preReleaseLabel.isBlank() && !LABEL_PATTERN.matcher(preReleaseLabel).matches()) {
             throw new IllegalArgumentException(
-                    "preReleaseLabel must contain only letters, numbers, and periods: " + preReleaseLabel);
+                    "preReleaseLabel must contain only letters, numbers, and periods: "
+                            + preReleaseLabel);
         }
 
         if (!buildMetadata.isBlank() && !LABEL_PATTERN.matcher(buildMetadata).matches()) {
             throw new IllegalArgumentException(
-                    "buildMetadata must contain only letters, numbers, and periods: " + buildMetadata);
+                    "buildMetadata must contain only letters, numbers, and periods: "
+                            + buildMetadata);
         }
     }
 
     /**
+     * Simplified factory for the common case
+     *
+     * @param major see semver
+     * @param minor see semver
+     * @param patch see semver
+     * @return new instance
+     */
+    public static SemVer from(int major, int minor, int patch) {
+        return new SemVer(major, minor, patch, "", "", false);
+    }
+
+    /**
      * @param raw semver string
-     * @return parsed {@link SemVer} instance
+     * @return parsed instance
      */
     public static SemVer parse(String raw) {
         if (raw == null || raw.isBlank()) {
@@ -107,11 +121,11 @@ public record SemVer(
                 .append(patch);
 
         if (!preReleaseLabel.isBlank()) {
-            out.append("-" + preReleaseLabel);
+            out.append("-").append(preReleaseLabel);
         }
 
         if (!buildMetadata.isBlank()) {
-            out.append("+" + buildMetadata);
+            out.append("+").append(buildMetadata);
         }
         return out.toString();
     }
@@ -121,7 +135,7 @@ public record SemVer(
      *
      * @param type   major, minor, patch, ...
      * @param amount eg. 1
-     * @return
+     * @return new instance
      */
     public SemVer withIncrement(VersionIncrementType type, int amount) {
         requireNonNull(type, "type is required and null.");
@@ -137,7 +151,7 @@ public record SemVer(
      * Bump the major version, drop preRelease & build metadata, retain v prefix when present.
      *
      * @param amount eg. 1
-     * @return
+     * @return new instance
      */
     public SemVer withMajorInc(int amount) {
         return new SemVer(major + amount,
@@ -152,7 +166,7 @@ public record SemVer(
      * Bump the minor version, drop preRelease & build metadata, retain v prefix when present.
      *
      * @param amount eg. 1
-     * @return
+     * @return new instance
      */
     public SemVer withMinorInc(int amount) {
         return new SemVer(
@@ -168,7 +182,7 @@ public record SemVer(
      * Bump the patch version, drop preRelease & build metadata, retain v prefix when present.
      *
      * @param amount eg. 1
-     * @return
+     * @return new instance
      */
     public SemVer withPatchInc(int amount) {
         return new SemVer(

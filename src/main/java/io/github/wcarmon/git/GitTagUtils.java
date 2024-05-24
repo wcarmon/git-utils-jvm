@@ -25,7 +25,7 @@ public final class GitTagUtils {
      * Semver version bump
      *
      * @param oldVersion "0.1.2" or "v0.1.2"
-     * @param bumpType
+     * @param bumpType   major, minor, patch, ...
      * @return next major/minor/patch version (eg. "0.1.3" or "v0.1.3")
      */
     public static String bumpVersion(String oldVersion, VersionIncrementType bumpType) {
@@ -68,7 +68,7 @@ public final class GitTagUtils {
      *
      * @param git     previously configured Git repo connection
      * @param tagName TODO
-     * @return
+     * @return AnnotatedTag
      */
     @Nullable
     public static AnnotatedTag getTag(Git git, String tagName) {
