@@ -5,7 +5,16 @@ import static java.util.Objects.requireNonNull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** See https://semver.org */
+/**
+ * See https://semver.org
+ *
+ * @param major
+ * @param minor
+ * @param patch
+ * @param preReleaseLabel
+ * @param buildMetadata
+ * @param includeVPrefix
+ */
 public record SemVer(
         int major,
         int minor,

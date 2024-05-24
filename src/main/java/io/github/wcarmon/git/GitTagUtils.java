@@ -79,10 +79,7 @@ public final class GitTagUtils {
         SemVer.parse(tagName);
 
         try {
-            return git.tag()
-                    .setName(tagName)
-                    .setMessage(message)
-                    .call();
+            return git.tag().setName(tagName).setMessage(message).call();
         } catch (GitAPIException ex) {
             throw new RuntimeException("failed to create tag", ex);
         }
@@ -195,10 +192,7 @@ public final class GitTagUtils {
 
         final FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try {
-            return builder.setGitDir(normalized.toFile())
-                    .findGitDir()
-                    .readEnvironment()
-                    .build();
+            return builder.setGitDir(normalized.toFile()).findGitDir().readEnvironment().build();
 
         } catch (Exception ex) {
             throw new RuntimeException("failed to open git dir: " + normalized, ex);
