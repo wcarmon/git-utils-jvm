@@ -9,7 +9,6 @@ import java.util.Collection;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -44,7 +43,7 @@ public final class GitTagUtils {
      * @param tagName {@link SemVer} instance
      * @param message anything helpful for human tag readers
      * @return newly created tag Ref
-     * @throws RefAlreadyExistsException when tag already exists
+     * when tag already exists, throws "RefAlreadyExistsException"
      */
     public static Ref createLightWeightTag(Git git, SemVer tagName, String message) {
         requireNonNull(git, "git is required and null.");
@@ -57,14 +56,14 @@ public final class GitTagUtils {
     }
 
     /**
-     * Equivalent: git tag v0.0.3                   <-- lightweight
-     * Equivalent: git tag -a v0.0.4 -m "foo bar"   <-- annotated
+     * Equivalent: git tag v0.0.3                  # lightweight
+     * Equivalent: git tag -a v0.0.4 -m "foo bar"  # annotated
      *
      * @param git     previously configured Git repo connection
      * @param tagName any valid semver string
      * @param message anything helpful for human tag readers
      * @return newly created tag Ref
-     * @throws RefAlreadyExistsException when tag already exists
+     * when tag already exists, throws "RefAlreadyExistsException"
      */
     public static Ref createLightWeightTag(Git git, String tagName, String message) {
         requireNonNull(git, "git is required and null.");

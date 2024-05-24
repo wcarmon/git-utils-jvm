@@ -8,12 +8,12 @@ import java.util.regex.Pattern;
 /**
  * See https://semver.org
  *
- * @param major
- * @param minor
- * @param patch
- * @param preReleaseLabel
- * @param buildMetadata
- * @param includeVPrefix
+ * @param major           required, first numeric segment
+ * @param minor           required, middle numeric segment
+ * @param patch           required, final numeric segment
+ * @param preReleaseLabel optional
+ * @param buildMetadata   optional
+ * @param includeVPrefix  true when string representation starts with "v"
  */
 public record SemVer(
         int major,
