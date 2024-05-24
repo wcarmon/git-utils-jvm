@@ -34,15 +34,9 @@ public final class GitTagUtils {
             throw new IllegalArgumentException("oldVersion is required");
         }
 
-        SemVer.parse(oldVersion);
-
-//        final Semver old = new Semver(oldVersion);
-//        return switch (bumpType) {
-//            case MAJOR -> old.withIncMajor(1).toString();
-//            case MINOR -> old.withIncMinor(1).toString();
-//            case PATCH -> old.withIncPatch(1).toString();
-//        };
-        throw new RuntimeException("TODO: implement me");
+        return SemVer.parse(oldVersion)
+                .withIncrement(bumpType, 1)
+                .toString();
     }
 
     /**

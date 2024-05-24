@@ -1,5 +1,7 @@
 package io.github.wcarmon.git;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,6 +90,93 @@ public record SemVer(
                 patch,
                 preReleaseLabel,
                 buildMetadata,
+                includeVPrefix);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder out = new StringBuilder(MAX_LEN);
+        if (includeVPrefix) {
+            out.append("v");
+        }
+
+        out.append(major)
+                .append(".")
+                .append(minor)
+                .append(".")
+                .append(patch);
+
+        if (!preReleaseLabel.isBlank()) {
+            out.append("-" + preReleaseLabel);
+        }
+
+        if (!buildMetadata.isBlank()) {
+            out.append("+" + buildMetadata);
+        }
+        return out.toString();
+    }
+
+    /**
+     * Bump appropriate version
+     *
+     * @param type   major, minor, patch, ...
+     * @param amount eg. 1
+     * @return
+     */
+    public SemVer withIncrement(VersionIncrementType type, int amount) {
+        requireNonNull(type, "type is required and null.");
+
+        return switch (type) {
+            case MAJOR -> withMajorInc(amount);
+            case MINOR -> withMinorInc(amount);
+            case PATCH -> withPatchInc(amount);
+        };
+    }
+
+    /**
+     * Bump the major version, drop preRelease & build metadata, retain v prefix when present.
+     *
+     * @param amount eg. 1
+     * @return
+     */
+    public SemVer withMajorInc(int amount) {
+        return new SemVer(major + amount,
+                minor,
+                patch,
+                "",
+                "",
+                includeVPrefix);
+    }
+
+    /**
+     * Bump the minor version, drop preRelease & build metadata, retain v prefix when present.
+     *
+     * @param amount eg. 1
+     * @return
+     */
+    public SemVer withMinorInc(int amount) {
+        return new SemVer(
+                major,
+                minor + amount,
+                patch,
+                "",
+                "",
+                includeVPrefix);
+    }
+
+    /**
+     * Bump the patch version, drop preRelease & build metadata, retain v prefix when present.
+     *
+     * @param amount eg. 1
+     * @return
+     */
+    public SemVer withPatchInc(int amount) {
+        return new SemVer(
+                major,
+                minor,
+                patch + amount,
+                "",
+                "",
                 includeVPrefix);
     }
 }
