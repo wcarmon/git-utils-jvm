@@ -1,8 +1,6 @@
 package io.github.wcarmon.git;
 
-/**
- * See https://semver.org/
- */
+/** See https://semver.org/ */
 public enum VersionIncrementType {
     /** incompatible API change */
     MAJOR,

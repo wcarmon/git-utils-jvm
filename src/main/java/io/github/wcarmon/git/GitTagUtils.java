@@ -16,16 +16,14 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Convenient api over some Git tag interaction
- */
+/** Convenient api over some Git tag interaction */
 public final class GitTagUtils {
 
     /**
      * Semver version bump
      *
      * @param oldVersion "0.1.2" or "v0.1.2"
-     * @param bumpType   major, minor, patch, ...
+     * @param bumpType major, minor, patch, ...
      * @return next major/minor/patch version (eg. "0.1.3" or "v0.1.3")
      */
     public static String bumpVersion(String oldVersion, VersionIncrementType bumpType) {
@@ -34,16 +32,13 @@ public final class GitTagUtils {
             throw new IllegalArgumentException("oldVersion is required");
         }
 
-        return SemVer.parse(oldVersion)
-                .withIncrement(bumpType, 1)
-                .toString();
+        return SemVer.parse(oldVersion).withIncrement(bumpType, 1).toString();
     }
 
     /**
-     * Equivalent: git fetch --tags
-     * Equivalent: git fetch --tags --prune --prune-tags
-     * <p>
-     * GOTCHA: requires "org.eclipse.jgit:org.eclipse.jgit.ssh.apache"
+     * Equivalent: git fetch --tags Equivalent: git fetch --tags --prune --prune-tags
+     *
+     * <p>GOTCHA: requires "org.eclipse.jgit:org.eclipse.jgit.ssh.apache"
      *
      * @param git previously configured Git repo connection
      * @return {@link FetchResult}
@@ -63,10 +58,9 @@ public final class GitTagUtils {
     }
 
     /**
-     * Equivalent: git show v0.0.3
-     * Equivalent: git show v0.0.4
+     * Equivalent: git show v0.0.3 Equivalent: git show v0.0.4
      *
-     * @param git     previously configured Git repo connection
+     * @param git previously configured Git repo connection
      * @param tagName TODO
      * @return AnnotatedTag
      */
@@ -80,12 +74,11 @@ public final class GitTagUtils {
         final Ref tagRef;
 
         try {
-            tagRef = git.tagList()
-                    .call()
-                    .stream()
-                    .filter(t -> tagNameMatches(t, tagName))
-                    .findFirst()
-                    .orElse(null);
+            tagRef =
+                    git.tagList().call().stream()
+                            .filter(t -> tagNameMatches(t, tagName))
+                            .findFirst()
+                            .orElse(null);
         } catch (Exception ex) {
             throw new RuntimeException("failed to get tags list", ex);
         }
@@ -113,10 +106,8 @@ public final class GitTagUtils {
     }
 
     /**
-     * Equivalent: git tag
-     * Equivalent: git tag --list
-     * Equivalent: git show-ref --tags
-     * Equivalent: ls $REPO_ROOT/.git/refs/tags
+     * Equivalent: git tag Equivalent: git tag --list Equivalent: git show-ref --tags Equivalent: ls
+     * $REPO_ROOT/.git/refs/tags
      *
      * @param git previously configured Git repo connection
      * @return Zero or more tags

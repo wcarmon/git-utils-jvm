@@ -1,10 +1,17 @@
 package io.github.wcarmon.git;
 
-
 import static java.util.Objects.requireNonNull;
 
 import java.time.Instant;
 
+/**
+ * @param ts           timestamp (date)
+ * @param fullMessage  See https://git-scm.com/book/en/v2/Git-Basics-Tagging
+ * @param shortName    See https://git-scm.com/book/en/v2/Git-Basics-Tagging
+ * @param shortMessage See https://git-scm.com/book/en/v2/Git-Basics-Tagging
+ * @param tagger       See https://git-scm.com/book/en/v2/Git-Basics-Tagging
+ * @param taggerEmail  See https://git-scm.com/book/en/v2/Git-Basics-Tagging
+ */
 public record AnnotatedTag(
         Instant ts,
         String fullMessage,
@@ -42,14 +49,7 @@ public record AnnotatedTag(
         }
 
         public AnnotatedTag build() {
-            return new AnnotatedTag(
-                    ts,
-                    fullMessage,
-                    shortName,
-                    shortMessage,
-                    tagger,
-                    taggerEmail
-            );
+            return new AnnotatedTag(ts, fullMessage, shortName, shortMessage, tagger, taggerEmail);
         }
 
         public Builder fullMessage(String val) {

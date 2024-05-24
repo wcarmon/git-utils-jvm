@@ -34,24 +34,21 @@ class GitTagUtilsTest {
             assertEquals(
                     entry.getValue(),
                     GitTagUtils.bumpVersion(entry.getKey(), MAJOR),
-                    "Failed on major version bump: input = '" + entry.getKey() + "'"
-            );
+                    "Failed on major version bump: input = '" + entry.getKey() + "'");
         }
 
         for (final var entry : minor.entrySet()) {
             assertEquals(
                     entry.getValue(),
                     GitTagUtils.bumpVersion(entry.getKey(), MINOR),
-                    "Failed on minor version bump: input = '" + entry.getKey() + "'"
-            );
+                    "Failed on minor version bump: input = '" + entry.getKey() + "'");
         }
 
         for (final var entry : patch.entrySet()) {
             assertEquals(
                     entry.getValue(),
                     GitTagUtils.bumpVersion(entry.getKey(), PATCH),
-                    "Failed on patch version bump: input = '" + entry.getKey() + "'"
-            );
+                    "Failed on patch version bump: input = '" + entry.getKey() + "'");
         }
     }
 }

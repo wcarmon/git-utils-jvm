@@ -16,13 +16,12 @@ public record SemVer(
         String buildMetadata,
         boolean includeVPrefix) {
 
-    private static final Pattern LABEL_PATTERN =
-            Pattern.compile("^[0-9A-Za-z.]+$");
+    private static final Pattern LABEL_PATTERN = Pattern.compile("^[0-9A-Za-z.]+$");
     private static final int MAX_BUILD_META_LEN = 48;
     private static final int MAX_LEN = 128;
     private static final int MAX_PRE_RELEASE_LABEL_LEN = 48;
-    private static final Pattern SEMVER = Pattern.compile(
-            "^v?(\\d+)\\.(\\d+)\\.(\\d+)(-([0-9A-Za-z.]+))?(\\+([0-9A-Za-z.]+))?$");
+    private static final Pattern SEMVER =
+            Pattern.compile("^v?(\\d+)\\.(\\d+)\\.(\\d+)(-([0-9A-Za-z.]+))?(\\+([0-9A-Za-z.]+))?$");
 
     public SemVer {
         if (major < 0) {
@@ -81,9 +80,8 @@ public record SemVer(
         }
 
         if (raw.length() > MAX_LEN) {
-            throw new IllegalArgumentException("semver value is too long: " +
-                    "length=" + raw.length()
-                    + " max=" + MAX_LEN);
+            throw new IllegalArgumentException(
+                    "semver value is too long: " + "length=" + raw.length() + " max=" + MAX_LEN);
         }
 
         final Matcher m = SEMVER.matcher(raw);
@@ -98,13 +96,7 @@ public record SemVer(
         final String preReleaseLabel = m.group(5);
         final String buildMetadata = m.group(7);
 
-        return new SemVer(
-                major,
-                minor,
-                patch,
-                preReleaseLabel,
-                buildMetadata,
-                includeVPrefix);
+        return new SemVer(major, minor, patch, preReleaseLabel, buildMetadata, includeVPrefix);
     }
 
     @Override
@@ -114,11 +106,7 @@ public record SemVer(
             out.append("v");
         }
 
-        out.append(major)
-                .append(".")
-                .append(minor)
-                .append(".")
-                .append(patch);
+        out.append(major).append(".").append(minor).append(".").append(patch);
 
         if (!preReleaseLabel.isBlank()) {
             out.append("-").append(preReleaseLabel);
@@ -133,7 +121,7 @@ public record SemVer(
     /**
      * Bump appropriate version
      *
-     * @param type   major, minor, patch, ...
+     * @param type major, minor, patch, ...
      * @param amount eg. 1
      * @return new instance
      */
@@ -148,49 +136,32 @@ public record SemVer(
     }
 
     /**
-     * Bump the major version, drop preRelease & build metadata, retain v prefix when present.
+     * Bump the major version, drop preRelease and build metadata, retain v prefix when present.
      *
      * @param amount eg. 1
      * @return new instance
      */
     public SemVer withMajorInc(int amount) {
-        return new SemVer(major + amount,
-                minor,
-                patch,
-                "",
-                "",
-                includeVPrefix);
+        return new SemVer(major + amount, minor, patch, "", "", includeVPrefix);
     }
 
     /**
-     * Bump the minor version, drop preRelease & build metadata, retain v prefix when present.
+     * Bump the minor version, drop preRelease and build metadata, retain v prefix when present.
      *
      * @param amount eg. 1
      * @return new instance
      */
     public SemVer withMinorInc(int amount) {
-        return new SemVer(
-                major,
-                minor + amount,
-                patch,
-                "",
-                "",
-                includeVPrefix);
+        return new SemVer(major, minor + amount, patch, "", "", includeVPrefix);
     }
 
     /**
-     * Bump the patch version, drop preRelease & build metadata, retain v prefix when present.
+     * Bump the patch version, drop preRelease and build metadata, retain v prefix when present.
      *
      * @param amount eg. 1
      * @return new instance
      */
     public SemVer withPatchInc(int amount) {
-        return new SemVer(
-                major,
-                minor,
-                patch + amount,
-                "",
-                "",
-                includeVPrefix);
+        return new SemVer(major, minor, patch + amount, "", "", includeVPrefix);
     }
 }
