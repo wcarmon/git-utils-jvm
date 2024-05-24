@@ -2,7 +2,7 @@ import com.diffplug.gradle.spotless.SpotlessExtension
 
 val mvnGroupId = "io.github.wcarmon"
 val mvnArtifactId = "git-utils-jvm" // see settings.gradle.kts
-val mvnVersion = "0.0.1"
+val mvnVersion = "0.0.2"
 
 val ossrhPassword: String = providers.gradleProperty("ossrhPassword").getOrElse("")
 val ossrhUsername: String = providers.gradleProperty("ossrhUsername").getOrElse("")

@@ -32,6 +32,16 @@ public record AnnotatedTag(
         taggerEmail = MoreStringUtils.normalize(taggerEmail);
     }
 
+    private AnnotatedTag(Builder builder) {
+        this(
+                builder.ts,
+                builder.fullMessage,
+                builder.shortName,
+                builder.shortMessage,
+                builder.tagger,
+                builder.taggerEmail);
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -49,7 +59,7 @@ public record AnnotatedTag(
         }
 
         public AnnotatedTag build() {
-            return new AnnotatedTag(ts, fullMessage, shortName, shortMessage, tagger, taggerEmail);
+            return new AnnotatedTag(this);
         }
 
         public Builder fullMessage(String val) {

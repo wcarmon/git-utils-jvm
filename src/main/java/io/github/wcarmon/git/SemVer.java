@@ -5,8 +5,6 @@ import static java.util.Objects.requireNonNull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// TODO: generate builder
-
 /** See https://semver.org */
 public record SemVer(
         int major,
@@ -56,6 +54,19 @@ public record SemVer(
                     "buildMetadata must contain only letters, numbers, and periods: "
                             + buildMetadata);
         }
+    }
+
+    private SemVer(Builder builder) {
+        this(builder.major,
+                builder.minor,
+                builder.patch,
+                builder.preReleaseLabel,
+                builder.buildMetadata,
+                builder.includeVPrefix);
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
@@ -121,7 +132,7 @@ public record SemVer(
     /**
      * Bump appropriate version
      *
-     * @param type major, minor, patch, ...
+     * @param type   major, minor, patch, ...
      * @param amount eg. 1
      * @return new instance
      */
@@ -163,5 +174,56 @@ public record SemVer(
      */
     public SemVer withPatchInc(int amount) {
         return new SemVer(major, minor, patch + amount, "", "", includeVPrefix);
+    }
+
+    public static final class Builder {
+
+        private String buildMetadata;
+        private boolean includeVPrefix;
+        private int major;
+        private int minor;
+        private int patch;
+        private String preReleaseLabel;
+
+        private Builder() {
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public SemVer build() {
+            return new SemVer(this);
+        }
+
+        public Builder buildMetadata(String val) {
+            buildMetadata = val;
+            return this;
+        }
+
+        public Builder includeVPrefix(boolean val) {
+            includeVPrefix = val;
+            return this;
+        }
+
+        public Builder major(int val) {
+            major = val;
+            return this;
+        }
+
+        public Builder minor(int val) {
+            minor = val;
+            return this;
+        }
+
+        public Builder patch(int val) {
+            patch = val;
+            return this;
+        }
+
+        public Builder preReleaseLabel(String val) {
+            preReleaseLabel = val;
+            return this;
+        }
     }
 }
