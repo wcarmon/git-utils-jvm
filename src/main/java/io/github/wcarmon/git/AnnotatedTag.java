@@ -5,8 +5,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.time.Instant;
 
-import org.jetbrains.annotations.Nullable;
-
 public record AnnotatedTag(
         Instant ts,
         String fullMessage,
@@ -21,22 +19,14 @@ public record AnnotatedTag(
             throw new IllegalArgumentException("shortName is required");
         }
 
-        fullMessage = normalize(fullMessage);
-        shortMessage = normalize(shortMessage);
-        tagger = normalize(tagger);
-        taggerEmail = normalize(taggerEmail);
+        fullMessage = MoreStringUtils.normalize(fullMessage);
+        shortMessage = MoreStringUtils.normalize(shortMessage);
+        tagger = MoreStringUtils.normalize(tagger);
+        taggerEmail = MoreStringUtils.normalize(taggerEmail);
     }
 
     public static Builder builder() {
         return new Builder();
-    }
-
-    private static String normalize(@Nullable String raw) {
-        if (raw == null || raw.isBlank()) {
-            return "";
-        }
-
-        return raw.strip();
     }
 
     public static final class Builder {

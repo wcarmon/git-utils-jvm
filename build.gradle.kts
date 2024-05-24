@@ -36,7 +36,6 @@ tasks {
 }
 
 dependencies {
-    implementation("com.vdurmont:semver4j:3.1.0")
     implementation("org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.9.0.202403050737-r")
     implementation("org.eclipse.jgit:org.eclipse.jgit:6.9.0.202403050737-r")
     implementation("org.jetbrains:annotations:24.1.0")
@@ -52,6 +51,17 @@ dependencies {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+tasks.withType<Test>().configureEach {
+    failFast = true
+    useJUnitPlatform { }
+
+    testLogging {
+        events("passed", "skipped", "failed", "standardOut", "standardError")
+        showExceptions = true
+        showStandardStreams = true
+    }
 }
 
 publishing {
