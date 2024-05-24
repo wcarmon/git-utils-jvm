@@ -3,6 +3,7 @@ package io.github.wcarmon.git;
 import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 
 import org.eclipse.jgit.api.FetchCommand;
@@ -11,8 +12,10 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.jetbrains.annotations.Nullable;
@@ -175,6 +178,30 @@ public final class GitTagUtils {
             return git.tagList().call();
         } catch (GitAPIException e) {
             throw new RuntimeException("Failed to list tags", e);
+        }
+    }
+
+    /**
+     * @param gitDir path to a directory named ".git"
+     * @return open connection to a Repository
+     */
+    public static Repository openRepository(Path gitDir) {
+        requireNonNull(gitDir, "gitDir is required and null.");
+
+        final Path normalized = gitDir.toAbsolutePath().normalize();
+        if (!normalized.toString().endsWith(".git")) {
+            throw new IllegalArgumentException("git dir path must end with '.git'");
+        }
+
+        final FileRepositoryBuilder builder = new FileRepositoryBuilder();
+        try {
+            return builder.setGitDir(normalized.toFile())
+                    .findGitDir()
+                    .readEnvironment()
+                    .build();
+
+        } catch (Exception ex) {
+            throw new RuntimeException("failed to open git dir: " + normalized, ex);
         }
     }
 
