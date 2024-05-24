@@ -144,10 +144,7 @@ tasks.javadoc {
 
 configure<SpotlessExtension> {
     java {
-        googleJavaFormat("1.18.1")
-            .skipJavadocFormatting()
-            .aosp()
-            .reflowLongStrings()
+        googleJavaFormat("1.18.1").aosp().reflowLongStrings().skipJavadocFormatting()
         importOrder()
         removeUnusedImports()
 
